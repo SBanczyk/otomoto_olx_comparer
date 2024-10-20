@@ -6,6 +6,6 @@ table = """ CREATE TABLE if not exists test (
             manufacturer char(255),
             model char(255),
             production_year char(4)
-            engine_type char(100)
+            engine_type char(10)
         ); """
 sqliteConnection.cursor().execute(table)
