@@ -1,5 +1,6 @@
 import sqlite3
 
+
 db_name = "sql.db"
 sqliteConnection = sqlite3.connect(db_name)
 table = """ CREATE TABLE if not exists test (
