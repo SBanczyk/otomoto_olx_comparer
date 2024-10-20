@@ -5,6 +5,6 @@ sqliteConnection = sqlite3.connect(db_name)
 table = """ CREATE TABLE if not exists test (
             manufacturer char(255),
             model char(255),
-            production_year int
+            production_year char(4)
         ); """
 sqliteConnection.cursor().execute(table)
