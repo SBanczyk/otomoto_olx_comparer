@@ -79,4 +79,3 @@ if __name__ == "__main__":
         elif "olx" in sys.argv[i][0:40]:
             comparison_dictionary[car_number] = get_olx_data(sys.argv[i])
     pprint.pprint(comparison_dictionary)
-    
