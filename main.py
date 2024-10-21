@@ -79,3 +79,4 @@ if __name__ == "__main__":
         elif "olx" in sys.argv[i][0:40]:
             comparison_dict[key] = get_olx_data(sys.argv[i])
     pprint.pprint(comparison_dict)
+    
