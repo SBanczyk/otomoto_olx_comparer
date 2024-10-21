@@ -28,3 +28,4 @@ def get_otomoto_data(url):
 if __name__ == "__main__":
     otomoto_data = get_otomoto_data(sys.argv[1])
     print(otomoto_data)
+    
