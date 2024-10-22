@@ -1,10 +1,13 @@
 import requests
 import sys
 import pprint
+import os
 from bs4 import BeautifulSoup
+from dotenv import load_dotenv
 
 
-headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'}
+load_dotenv()
+headers = {'User-Agent': os.getenv('USER-AGENT')}
 
 
 def clean_value(str_value):

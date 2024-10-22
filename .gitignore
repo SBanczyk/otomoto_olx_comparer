@@ -1,2 +1,3 @@
 venv/
 otomoto_olx_comparer.db
+.env
