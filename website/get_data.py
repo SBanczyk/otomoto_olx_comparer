@@ -1,6 +1,5 @@
 import requests
 import sys
-import pprint
 import os
 from bs4 import BeautifulSoup
 from dotenv import load_dotenv
@@ -95,7 +94,4 @@ def get_comparison_data(url_1, url_2):
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 3:
-        pprint.pprint("Usage: python get_data.py <url_1> <url_2>")
-    else:
-        pprint.pprint(get_comparison_data(sys.argv[1], sys.argv[2]))
+    print(get_comparison_data(sys.argv[1], sys.argv[2]))
