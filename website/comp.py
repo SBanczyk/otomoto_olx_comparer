@@ -82,5 +82,3 @@ def my_comparisons():
             </div>
             """
     return render_template("my-comparisons.html", text=text)
-
-

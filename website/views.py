@@ -11,4 +11,3 @@ def home():
             </div>
             """
     return render_template("home.html", text=text)
-
