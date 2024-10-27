@@ -60,6 +60,7 @@ def comparison():
             text += "</td>"
         text += "</tr>"
     text += "</table>"
+    text += "<div class='text-center mt-3'> <form method='POST'> <button type='submit' class='btn btn-primary btn-lg'>Dodaj do moich porównań</button> </form> </div>"
     if request.method == 'POST':
         return redirect(url_for('views.home'))
     return render_template("comparison.html", text=text)

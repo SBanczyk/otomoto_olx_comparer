@@ -18,7 +18,7 @@ def clean_value(str_value):
 
 def get_otomoto_data(url):
     if "osobowe" not in url[0:40]:
-        raise Exception("Passenger cars only.")
+        raise ValueError
     response = requests.get(url, headers=headers)
     if response.status_code == 200:
         car_data = {}
@@ -71,7 +71,7 @@ def get_olx_data(url):
                 is_passenger_car = True
                 break
         if not is_passenger_car:
-            raise Exception("Passenger cars only.")
+            raise ValueError
         properties_values = content.find_all("p", {"class": "css-b5m1rv"})
         if len(properties_values) == 0:
             raise Exception("No data.")
