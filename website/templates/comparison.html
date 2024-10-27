@@ -1,4 +1,9 @@
 {% extends "base.html" %}
 {% block body %}
 {{ text | safe}}
+<div class="text-center mt-3">
+    <form method="POST">
+        <button type="submit" class="btn btn-primary btn-lg">Dodaj do moich porównań</button>
+    </form>
+</div>
 {% endblock %}

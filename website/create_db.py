@@ -45,6 +45,7 @@ def create_db():
     conn.commit()
     conn.cursor().execute(comparisons)
     conn.commit()
+    conn.close()
 
 if __name__ == "__main__":
     create_db()

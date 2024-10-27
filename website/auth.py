@@ -6,7 +6,7 @@ auth = Blueprint('auth', __name__)
 
 @auth.route('/login')
 def login():
-    text = """<div class='d-flex justify-content-center align-items-center vh-100'>
+    text = """<div class='d-flex justify-content-center align-items-center vh-100' style='max-height: 90vh'>
                 <h1>Logowanie.</h1>
             </div>
             """
@@ -15,7 +15,7 @@ def login():
 
 @auth.route('/logout')
 def logout():
-    text = """<div class='d-flex justify-content-center align-items-center vh-100'>
+    text = """<div class='d-flex justify-content-center align-items-center vh-100' style='max-height: 90vh'>
                 <h1>Wylogowanie.</h1>
             </div>
             """
@@ -24,7 +24,7 @@ def logout():
 
 @auth.route('/sign-up')
 def sign_up():
-    text = """<div class='d-flex justify-content-center align-items-center vh-100'>
+    text = """<div class='d-flex justify-content-center align-items-center vh-100' style='max-height: 90vh'>
                 <h1>Rejestracja.</h1>
             </div>
             """

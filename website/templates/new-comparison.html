@@ -1,4 +1,31 @@
 {% extends "base.html" %}
 {% block body %}
+<br />
+<form method="POST" class="d-flex flex-column align-items-center">
+    <h2 class="text-center">Nowe porównanie</h2>
+    <div class="d-flex justify-content-center gap-4 mb-4" style="width: 100%; max-width: 700px;">
+        <div class="form-group col">
+            <label for="car_1" class="text-center w-100 fs-4">Samochód 1</label>
+            <input
+                type="text"
+                class="form-control form-control-lg"
+                id="car_1"
+                name="car_1"
+                placeholder="Podaj link"
+            />
+        </div>
+        <div class="form-group col">
+            <label for="car_2" class="text-center w-100 fs-4">Samochód 2</label>
+            <input
+                type="text"
+                class="form-control form-control-lg"
+                id="car_2"
+                name="car_2"
+                placeholder="Podaj link"
+            />
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary btn-lg mt-3">Porównaj</button>
+</form>
 {{ text | safe}}
 {% endblock %}
