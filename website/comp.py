@@ -13,7 +13,9 @@ def comparison():
     try:
         data = get_comparison_data(car_1_url, car_2_url)
     except ValueError:
-        return render_template("comparison.html", text = "<h1 style='text-align:center'>Niepoprawny link.</h1>")
+        return render_template("comparison.html", text="""<div class='d-flex justify-content-center align-items-center vh-100' style='max-height: 90vh'>
+                                                        <h3>Jeden z linków nie jest poprawny.</h3>
+                                                        </div>""")
     text = "<table class='table table-hover text-center'>"
     text += "<tr><th></th><th>Samochód 1</th><th>Samochód 2</th>"
     i = 1
