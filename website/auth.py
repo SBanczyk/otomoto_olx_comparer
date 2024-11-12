@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, flash, session, redirect, url_for
 from dotenv import load_dotenv
 from os import getenv, getcwd, path
+from bcrypt import gensalt, hashpw, checkpw
 import sqlite3
 
 
@@ -11,15 +12,20 @@ load_dotenv()
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        db_path = path.join(getcwd(), getenv('DB_NAME'))
-        conn = sqlite3.connect(db_path)
-        result = conn.cursor().execute("select email, password from users").fetchall()
-        if request.form.get('email') == result[0][0] and request.form.get('password') == result[0][1]:
-            session['email'] = request.form.get('email')
-            return redirect(url_for('views.home'))
-        else:
-            flash("NOT OK", category="error")
-        conn.close()
+        try:
+            conn = sqlite3.connect(path.join(getcwd(), getenv('DB_NAME')))
+            result = conn.cursor().execute("select email, password from users").fetchall()
+            if len(result) > 0:
+                if request.form.get('email') == result[0][0] and checkpw(request.form.get('password').encode(), result[0][1]):
+                    session['email'] = request.form.get('email')
+                    return redirect(url_for('views.home'))
+                else:
+                    flash("Kombinacja e-mailu i hasła nie jest poprawna.")
+            else:
+                flash("Na podany e-mail nie istnieje konto.", category="error")
+            conn.close()
+        except:
+            flash("Podczas logowania wystąpił błąd.")
     return render_template("login.html")
 
 
@@ -29,10 +35,27 @@ def logout():
     return redirect(url_for('views.home'))
 
 
-@auth.route('/sign-up')
+@auth.route('/sign-up', methods=['GET', 'POST'])
 def sign_up():
-    text = """<div class='d-flex justify-content-center align-items-center vh-100' style='max-height: 90vh'>
-                <h1>Rejestracja.</h1>
-            </div>
-            """
-    return render_template("sign-up.html", text=text)
+    if request.method == 'POST':
+        password_1 = request.form.get('password_1')
+        password_2 = request.form.get('password_2')
+        if password_1 != password_2:
+            flash("Hasła są rózne.")
+        if len(password_1) < 8:
+            flash("Hasło musi mieć co najmniej 8 znaków.")
+        else:
+            try:
+                conn = sqlite3.connect(path.join(getcwd(), getenv('DB_NAME')))
+                if len(conn.cursor().execute(f"select email from users where email=?", (request.form.get('email'), )).fetchall()) > 0:
+                    flash("Na podany e-mail istnieje już konto.", category="error")
+                else:
+                    hashed_password = hashpw(password_1.encode(), gensalt())
+                    conn.cursor().execute("insert into users(email, password) values(?, ?)", (request.form.get('email'), hashed_password))
+                    conn.commit()
+                    session['email'] = request.form.get('email')
+                    return redirect(url_for('views.home'))
+                conn.close()
+            except:
+                flash("Podczas rejestracji wystąpił bład.", category="error")
+    return render_template("sign-up.html")

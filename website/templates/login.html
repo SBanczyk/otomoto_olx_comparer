@@ -1,31 +1,29 @@
 {% extends "base.html" %}
-{% block body%}
+{% block body %}
 <form method="POST" class="d-flex flex-column align-items-center">
     <h2 class="text-center">Logowanie</h2>
-    <div class="d-flex justify-content-center gap-4 mb-4" style="width: 100%; max-width: 700px;">
+    <div class="mb-3" style="width: 100%; max-width: 700px;">
         <div class="form-group col">
-            <label for="email">Email Address</label>
+            <label for="email">E-mail</label>
             <input
                 type="email"
                 class="form-control"
                 id="email"
                 name="email"
-                placeholder="Enter email"
+                placeholder="Wpisz e-mail"
             />
         </div>
         <div class="form-group col">
-            <label for="password">Password</label>
+            <label for="password">Hasło</label>
             <input
                 type="password"
                 class="form-control"
                 id="password"
                 name="password"
-                placeholder="Enter password"
+                placeholder="Wpisz hasło"
             />
         </div>
     </div>
-    <br />
-    <br />
-    <button type="submit" class="btn btn-primary">Login</button>
+    <button type="submit" class="btn btn-primary btn-lg">Zaloguj</button>
 </form>
 {% endblock %}
