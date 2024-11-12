@@ -45,7 +45,6 @@ def create_db():
     conn.commit()
     conn.cursor().execute(comparisons)
     conn.commit()
-    print(conn.cursor().execute("select * from users").fetchall())
     conn.close()
 
 if __name__ == "__main__":
