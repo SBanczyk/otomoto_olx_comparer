@@ -1,6 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for
 from .get_data import get_comparison_data
-from sys import argv
 
 
 comp = Blueprint('compare', __name__)

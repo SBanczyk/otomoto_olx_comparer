@@ -1,8 +1,8 @@
+import sqlite3
+import bcrypt
 from flask import Blueprint, render_template, request, flash, session, redirect, url_for
 from dotenv import load_dotenv
 from os import getenv, getcwd, path
-from bcrypt import gensalt, hashpw, checkpw
-import sqlite3
 
 
 auth = Blueprint('auth', __name__)
@@ -16,7 +16,7 @@ def login():
             conn = sqlite3.connect(path.join(getcwd(), getenv('DB_NAME')))
             result = conn.cursor().execute("select email, password from users").fetchall()
             if len(result) > 0:
-                if request.form.get('email') == result[0][0] and checkpw(request.form.get('password').encode(), result[0][1]):
+                if request.form.get('email') == result[0][0] and bcrypt.checkpw(request.form.get('password').encode(), result[0][1]):
                     session['email'] = request.form.get('email')
                     return redirect(url_for('views.home'))
                 else:
@@ -50,7 +50,7 @@ def sign_up():
                 if len(conn.cursor().execute(f"select email from users where email=?", (request.form.get('email'), )).fetchall()) > 0:
                     flash("Na podany e-mail istnieje już konto.", category="error")
                 else:
-                    hashed_password = hashpw(password_1.encode(), gensalt())
+                    hashed_password = bcrypt.hashpw(password_1.encode(), bcrypt.gensalt())
                     conn.cursor().execute("insert into users(email, password) values(?, ?)", (request.form.get('email'), hashed_password))
                     conn.commit()
                     session['email'] = request.form.get('email')
