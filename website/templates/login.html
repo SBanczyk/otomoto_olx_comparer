@@ -1,4 +1,31 @@
 {% extends "base.html" %}
-{% block body %}
-{{ text | safe}}
+{% block body%}
+<form method="POST" class="d-flex flex-column align-items-center">
+    <h2 class="text-center">Logowanie</h2>
+    <div class="d-flex justify-content-center gap-4 mb-4" style="width: 100%; max-width: 700px;">
+        <div class="form-group col">
+            <label for="email">Email Address</label>
+            <input
+                type="email"
+                class="form-control"
+                id="email"
+                name="email"
+                placeholder="Enter email"
+            />
+        </div>
+        <div class="form-group col">
+            <label for="password">Password</label>
+            <input
+                type="password"
+                class="form-control"
+                id="password"
+                name="password"
+                placeholder="Enter password"
+            />
+        </div>
+    </div>
+    <br />
+    <br />
+    <button type="submit" class="btn btn-primary">Login</button>
+</form>
 {% endblock %}

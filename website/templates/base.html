@@ -32,21 +32,35 @@
           <li class="nav-item">
             <a class="nav-link text-light px-3" id="new_comparison" href="/new-comparison">Nowe porównanie</a>
           </li>
+          {% if session.get('email') %}
           <li class="nav-item">
             <a class="nav-link text-light px-3" id="my_comparisons" href="/my-comparisons">Moje porównania</a>
           </li>
           <li class="nav-item">
             <a class="nav-link text-light px-3" id="logout" href="/logout">Wyloguj</a>
           </li>
+          {% endif %}
           <li class="nav-item">
             <a class="nav-link text-light px-3" id="login" href="/login">Zaloguj</a>
           </li>
+          {% if not session.get('email') %}
           <li class="nav-item">
             <a class="nav-link text-light px-3 btn btn-outline-light rounded-pill" id="signUp" href="/sign-up">Rejestracja</a>
           </li>
+          {% endif %}
         </ul>
       </div>
     </nav>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-danger" role="alert">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
     {% block body %}{% endblock %}
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
       integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">

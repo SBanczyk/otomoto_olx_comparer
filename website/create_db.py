@@ -1,5 +1,5 @@
 import sqlite3
-import os
+from os import getenv
 from dotenv import load_dotenv
 
 
@@ -7,7 +7,7 @@ load_dotenv()
 
 
 def create_db():
-    conn = sqlite3.connect(os.getenv('DB_NAME'))
+    conn = sqlite3.connect(getenv('DB_NAME'))
     users = """create table if not exists users
         (
             user_id integer primary key autoincrement not null,
@@ -44,6 +44,9 @@ def create_db():
     conn.cursor().execute(cars)
     conn.commit()
     conn.cursor().execute(comparisons)
+    conn.commit()
+    user = "insert into users('email', 'password') values('as@as.as', '123')"
+    conn.cursor().execute(user)
     conn.commit()
     conn.close()
 
