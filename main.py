@@ -9,6 +9,6 @@ load_dotenv()
 
 
 if __name__ == "__main__":
-    # if not path.isfile(path.join(getcwd(), getenv('DB_NAME'))):
-    create_db()
+    if not path.isfile(path.join(getcwd(), getenv('DB_NAME'))):
+        create_db()
     app.run(debug=True)
