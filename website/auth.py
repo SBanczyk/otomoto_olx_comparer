@@ -14,15 +14,14 @@ def login():
     if request.method == 'POST':
         try:
             conn = sqlite3.connect(path.join(getcwd(), getenv('DB_NAME')))
-            result = conn.cursor().execute("select email, password from users").fetchall()
+            
+            result = conn.cursor().execute(f"select email, password from users where email=?", (request.form.get('email'), )).fetchall()
             if len(result) > 0:
                 if request.form.get('email') == result[0][0] and bcrypt.checkpw(request.form.get('password').encode(), result[0][1]):
                     session['email'] = request.form.get('email')
                     return redirect(url_for('views.home'))
                 else:
                     flash("Kombinacja e-mailu i hasła nie jest poprawna.")
-            else:
-                flash("Na podany e-mail nie istnieje konto.")
             conn.close()
         except:
             flash("Podczas logowania wystąpił błąd.")
