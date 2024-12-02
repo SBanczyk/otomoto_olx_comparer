@@ -22,7 +22,7 @@ def login():
                 else:
                     flash("Kombinacja e-mailu i hasła nie jest poprawna.")
             else:
-                flash("Na podany e-mail nie istnieje konto.", category="error")
+                flash("Na podany e-mail nie istnieje konto.")
             conn.close()
         except:
             flash("Podczas logowania wystąpił błąd.")
@@ -48,7 +48,7 @@ def sign_up():
             try:
                 conn = sqlite3.connect(path.join(getcwd(), getenv('DB_NAME')))
                 if len(conn.cursor().execute(f"select email from users where email=?", (request.form.get('email'), )).fetchall()) > 0:
-                    flash("Na podany e-mail istnieje już konto.", category="error")
+                    flash("Na podany e-mail istnieje już konto.")
                 else:
                     hashed_password = bcrypt.hashpw(password_1.encode(), bcrypt.gensalt())
                     conn.cursor().execute("insert into users(email, password) values(?, ?)", (request.form.get('email'), hashed_password))
@@ -57,5 +57,5 @@ def sign_up():
                     return redirect(url_for('views.home'))
                 conn.close()
             except:
-                flash("Podczas rejestracji wystąpił bład.", category="error")
+                flash("Podczas rejestracji wystąpił bład.")
     return render_template("sign-up.html")
