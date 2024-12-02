@@ -30,6 +30,7 @@ def create_db():
             user_id integer not null,
             car1_id integer not null,
             car2_id integer not null,
+            is_active integer not null,
             foreign key(user_id) references users(user_id),
             foreign key(car1_id) references cars(car_id),
             foreign key(car2_id) references cars(car_id)
