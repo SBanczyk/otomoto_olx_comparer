@@ -1,4 +1,14 @@
 {% extends "base.html" %}
 {% block body %}
-{{ text | safe}}
+<br />
+<h2 class="text-center">Moje porównania</h2>
+<div class='text-center mt-3'>
+  <form method='POST' onsubmit="return confirm('Czy na pewno chcesz wyczyścić swoje porównania?');">
+      <button type='submit' class='btn btn-primary btn-lg'>Wyczyść</button>
+  </form>
+</div>
+<br />
+<ul class="list-group d-flex justify-content-center align-items-center">
+    {{ text | safe }}
+</ul>
 {% endblock %}

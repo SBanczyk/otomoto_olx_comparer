@@ -20,13 +20,8 @@ def create_db():
             car_id integer primary key autoincrement not null,
             brand text not null,
             model text not null,
-            horse_power int not null,
-            engine_capacity int not null,
-            auction_portal text not null,
-            mileage int not null,
-            fuel_type text not null,
-            production_year text not null,
-            gearbox text not null,
+            production_year integer not null,
+            price integer not null,
             url text not null
         );"""
     comparisons = """create table if not exists comparisons

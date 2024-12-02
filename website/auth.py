@@ -7,23 +7,24 @@ from dotenv import load_dotenv
 
 
 auth = Blueprint('auth', __name__)
-load_dotenv()
 
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         try:
-            conn = sqlite3.connect(os.path.join(os.getcwd(), os.getenv('DB_NAME')))
-            
-            result = conn.cursor().execute(f"select email, password from users where email=?", (request.form.get('email'), )).fetchall()
+            conn = sqlite3.connect(os.path.join(os.getcwd(), os.getenv('DB_NAME')))        
+            result = conn.cursor().execute("select email, password from users where email=?", (request.form.get('email'), )).fetchall()
             if len(result) > 0:
                 if request.form.get('email') == result[0][0] and bcrypt.checkpw(request.form.get('password').encode(), result[0][1]):
                     session['email'] = request.form.get('email')
+                    session['user_id'] = conn.cursor().execute("select user_id from users where email=?", (session['email'], )).fetchall()[0][0]
+                    conn.close()
                     return redirect(url_for('views.home'))
                 else:
                     flash("Kombinacja e-mailu i hasła nie jest poprawna.")
-            conn.close()
+            else:
+                flash("Brak konta o podanym e-mailu.")
         except:
             flash("Podczas logowania wystąpił błąd.")
     return render_template("login.html")
@@ -47,15 +48,16 @@ def sign_up():
         else:
             try:
                 conn = sqlite3.connect(os.path.join(os.getcwd(), os.getenv('DB_NAME')))
-                if len(conn.cursor().execute(f"select email from users where email=?", (request.form.get('email'), )).fetchall()) > 0:
+                if len(conn.cursor().execute("select email from users where email=?", (request.form.get('email'), )).fetchall()) > 0:
                     flash("Na podany e-mail istnieje już konto.")
                 else:
                     hashed_password = bcrypt.hashpw(password_1.encode(), bcrypt.gensalt())
                     conn.cursor().execute("insert into users(email, password) values(?, ?)", (request.form.get('email'), hashed_password))
                     conn.commit()
                     session['email'] = request.form.get('email')
+                    session['user_id'] = conn.cursor().execute("select user_id from users where email=?", (session['email'], )).fetchall()[0][0]
+                    conn.close()
                     return redirect(url_for('views.home'))
-                conn.close()
             except:
-                flash("Podczas rejestracji wystąpił bład.")
+                flash("Podczas rejestracji wystąpił błąd.")
     return render_template("sign-up.html")

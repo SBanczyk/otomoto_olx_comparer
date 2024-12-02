@@ -1,4 +1,6 @@
-from flask import Blueprint, render_template, request, redirect, url_for
+import sqlite3
+import os
+from flask import Blueprint, render_template, request, redirect, url_for, session, flash
 from .get_data import get_comparison_data
 
 
@@ -7,11 +9,12 @@ comp = Blueprint('compare', __name__)
 
 @comp.route('/comparison', methods=['GET', 'POST'])
 def comparison():
+    session.pop('comparison_ok', None)
     car_1_url = request.args.get('car_1')
     car_2_url = request.args.get('car_2')
     try:
         data = get_comparison_data(car_1_url, car_2_url)
-    except ValueError:
+    except:
         text="""<div class='d-flex justify-content-center align-items-center vh-100' style='max-height: 90vh'>
                 <h3>Jeden z linków nie jest poprawny.</h3>
                 </div>"""
@@ -23,7 +26,7 @@ def comparison():
         if prop == 'currency':
             continue
         text += "<tr>"
-        text += f"<td class='text-muted'>"
+        text += "<td class='text-muted'>"
         if prop == 'brand':
             text += "Marka"
         elif prop == 'model':
@@ -66,7 +69,36 @@ def comparison():
             <td class='text-muted'><a href='{car_2_url}' target='_blank'>{car_2_url}</a></td></tr>"""
     text += "</table>"
     if request.method == 'POST':
-        return redirect(url_for('views.home'))
+        try:
+            conn = sqlite3.connect(os.path.join(os.getcwd(), os.getenv('DB_NAME')))
+            result = conn.cursor().execute("select * from cars where url=?", (car_1_url, )).fetchall()
+            if len(result) > 0:
+                car_1_id = result[0][0]
+            else:
+                conn.cursor().execute("insert into cars(brand, model, production_year, price, url) values(?, ?, ?, ?, ?)",
+                                      (data['car_1']['brand'], data['car_1']['model'],
+                                        data['car_1']['year'], data['car_1']['price'],
+                                        car_1_url))
+                conn.commit()
+                result = conn.cursor().execute("select * from cars where url=?", (car_1_url, )).fetchall()
+                car_1_id = result[0][0]
+            result = conn.cursor().execute("select * from cars where url=?", (car_2_url, )).fetchall()
+            if len(result) > 0:
+                car_2_id = result[0][0]
+            else:
+                conn.cursor().execute("insert into cars(brand, model, production_year, price, url) values(?, ?, ?, ?, ?)", (data['car_2']['brand'], data['car_2']['model'],
+                                            data['car_2']['year'], data['car_2']['price'],
+                                            car_2_url))
+                conn.commit()
+                result = conn.cursor().execute("select * from cars where url=?", (car_2_url, )).fetchall()
+                car_2_id = result[0][0]
+            conn.cursor().execute("insert into comparisons(user_id, car1_id, car2_id) values(?, ?, ?)", (session['user_id'], car_1_id, car_2_id))
+            conn.commit()
+            flash("Dodano do moich porównań.")
+            conn.close()
+        except:
+            flash("Podczas dodawania pojazdów wystąpił błąd.")
+    session['comparison_ok'] = True
     return render_template("comparison.html", text=text)
 
 
@@ -80,10 +112,36 @@ def new_comparison():
     return render_template("new-comparison.html")
 
 
-@comp.route('/my-comparisons')
+@comp.route('/my-comparisons', methods=['GET', 'POST'])
 def my_comparisons():
-    text = """<div class='d-flex justify-content-center align-items-center vh-100' style='max-height: 90vh'>
-                <h1>Moje porównania.</h1>
-            </div>
-            """
+    try:
+        conn = sqlite3.connect(os.path.join(os.getcwd(), os.getenv('DB_NAME')))
+        comparisons = conn.cursor().execute("""select CA1.brand, CA1.model, CA1.production_year, CA1.price, CA1.url,
+                                            CA2.brand, CA2.model, CA2.production_year, CA2.price, CA2.url
+                                            from comparisons CO join cars CA1 on CO.car1_id = CA1.car_id
+                                            join cars CA2 on CO.car2_id = CA2.car_id
+                                            where user_id=?""", (session['user_id'], )).fetchall()
+        text = ""
+        if len(comparisons) > 0:
+            for comparison in comparisons:
+                text += f"""<li class='list-group-item text-center'>
+                            <a class='text-reset' href='/comparison?car_1={comparison[4]}&car_2={comparison[9]}'>
+                            {comparison[0]} {comparison[1]} z {comparison[2]} za {comparison[3]}
+                            <br />vs<br />
+                            {comparison[5]} {comparison[6]} z {comparison[7]} za {comparison[8]}
+                            </a></li><br />"""
+        else:
+            text = ""
+        conn.close()
+    except:
+        flash("Podczas ładowania porównań wystąpił błąd.")
+    if request.method == 'POST':
+        try:
+            conn = sqlite3.connect(os.path.join(os.getcwd(), os.getenv('DB_NAME')))
+            conn.cursor().execute("delete from comparisons where user_id=?", (session['user_id'], ))
+            conn.commit()
+            conn.close()
+            return redirect(url_for('compare.my_comparisons'))
+        except:
+            flash("Podczas czyszczenia listy porównań wystąpił błąd.")
     return render_template("my-comparisons.html", text=text)
