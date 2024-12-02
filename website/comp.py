@@ -12,9 +12,10 @@ def comparison():
     try:
         data = get_comparison_data(car_1_url, car_2_url)
     except ValueError:
-        return render_template("comparison.html", text="""<div class='d-flex justify-content-center align-items-center vh-100' style='max-height: 90vh'>
-                                                        <h3>Jeden z linków nie jest poprawny.</h3>
-                                                        </div>""")
+        text="""<div class='d-flex justify-content-center align-items-center vh-100' style='max-height: 90vh'>
+                <h3>Jeden z linków nie jest poprawny.</h3>
+                </div>"""
+        return render_template("comparison.html", text=text)
     text = "<table class='table table-hover text-center'>"
     text += "<tr><th></th><th>Samochód 1</th><th>Samochód 2</th>"
     i = 1
@@ -64,8 +65,6 @@ def comparison():
     text += f"""<tr><td class='text-muted'>Link</td><td><a href='{car_1_url}' target='_blank'>{car_1_url}</a></td>
             <td class='text-muted'><a href='{car_2_url}' target='_blank'>{car_2_url}</a></td></tr>"""
     text += "</table>"
-    text += """<div class='text-center mt-3'><form method='POST'><button type='submit' class='btn btn-primary btn-lg'>
-            Dodaj do moich porównań</button></form></div>"""
     if request.method == 'POST':
         return redirect(url_for('views.home'))
     return render_template("comparison.html", text=text)

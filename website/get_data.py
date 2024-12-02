@@ -43,8 +43,6 @@ def get_otomoto_data(url):
                     car_data['fuel'] = clean_value(value)
                 elif property == "Skrzynia biegów":
                     car_data['gearbox'] = clean_value(value)
-
-                
         properties = content.find_all("p", {"class": "eim4snj7 ooa-y26jp er34gjf0"})
         values = content.find_all("p", {"class": "eim4snj8 ooa-17xeqrd er34gjf0"})
         for property, value in zip(properties, values):
@@ -101,7 +99,6 @@ def get_olx_data(url):
                         car_data['year'] = clean_value(value)
                     elif property == "Skrzynia biegów":
                         car_data['gearbox'] = clean_value(value)
-
         order = ['brand', 'model', 'year', 'fuel', 'engine_size', 'power', 'gearbox', 'mileage', 'price', 'currency', 'website']
         return {key: car_data[key] for key in order}
 

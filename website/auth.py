@@ -1,8 +1,9 @@
 import sqlite3
 import bcrypt
+import os
 from flask import Blueprint, render_template, request, flash, session, redirect, url_for
 from dotenv import load_dotenv
-from os import getenv, getcwd, path
+
 
 
 auth = Blueprint('auth', __name__)
@@ -13,7 +14,7 @@ load_dotenv()
 def login():
     if request.method == 'POST':
         try:
-            conn = sqlite3.connect(path.join(getcwd(), getenv('DB_NAME')))
+            conn = sqlite3.connect(os.path.join(os.getcwd(), os.getenv('DB_NAME')))
             
             result = conn.cursor().execute(f"select email, password from users where email=?", (request.form.get('email'), )).fetchall()
             if len(result) > 0:
@@ -45,7 +46,7 @@ def sign_up():
             flash("Hasło musi mieć co najmniej 8 znaków.")
         else:
             try:
-                conn = sqlite3.connect(path.join(getcwd(), getenv('DB_NAME')))
+                conn = sqlite3.connect(os.path.join(os.getcwd(), os.getenv('DB_NAME')))
                 if len(conn.cursor().execute(f"select email from users where email=?", (request.form.get('email'), )).fetchall()) > 0:
                     flash("Na podany e-mail istnieje już konto.")
                 else:
