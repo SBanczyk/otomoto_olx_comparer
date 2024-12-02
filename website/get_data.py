@@ -27,8 +27,8 @@ def get_otomoto_data(url):
         car_data['price'] = clean_value(content.find_all("h3", {"class": "ooa-1kdys7g"})[0].get_text())
         car_data['currency'] = content.find_all("p", {"class": "ooa-m6bn4u"})[0].get_text()
         car_data['brand'] = content.find_all("h1", {"class": "ooa-1dueukt"})[0].get_text().split(" ")[0]
-        properties = content.find_all("p", {"class": "e1ho6mkz3 ooa-rlgnr er34gjf0"})
-        values = content.find_all("p", {"class": "e1ho6mkz2 ooa-1rcllto er34gjf0"})
+        properties = content.find_all("p", {"class": "ee3fiwr3 ooa-rlgnr er34gjf0"})
+        values = content.find_all("p", {"class": "ee3fiwr2 ooa-1rcllto er34gjf0"})
         for property, value in zip(properties, values):
             property = property.get_text().strip()
             value = value.get_text().strip()
@@ -45,8 +45,8 @@ def get_otomoto_data(url):
                     car_data['gearbox'] = clean_value(value)
 
                 
-        properties = content.find_all("p", {"class": "eizxi837 ooa-y26jp er34gjf0"})
-        values = content.find_all("p", {"class": "eizxi838 ooa-17xeqrd er34gjf0"})
+        properties = content.find_all("p", {"class": "eim4snj7 ooa-y26jp er34gjf0"})
+        values = content.find_all("p", {"class": "eim4snj8 ooa-17xeqrd er34gjf0"})
         for property, value in zip(properties, values):
             property = property.get_text().strip()
             value = value.get_text().strip()
