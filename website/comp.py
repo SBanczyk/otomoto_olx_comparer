@@ -1,6 +1,7 @@
 import sqlite3
 import os
-from flask import Blueprint, render_template, request, redirect, url_for, session, flash
+import json
+from flask import Blueprint, render_template, request, redirect, url_for, session, flash, jsonify
 from .get_data import get_comparison_data
 
 
@@ -92,7 +93,8 @@ def comparison():
                 conn.commit()
                 result = conn.cursor().execute("select * from cars where url=?", (car_2_url, )).fetchall()
                 car_2_id = result[0][0]
-            conn.cursor().execute("insert into comparisons(user_id, car1_id, car2_id) values(?, ?, ?)", (session['user_id'], car_1_id, car_2_id))
+            conn.cursor().execute("insert into comparisons(user_id, car1_id, car2_id, is_active) values(?, ?, ?, 1)",
+                                  (session['user_id'], car_1_id, car_2_id))
             conn.commit()
             flash("Dodano do moich porównań.")
             conn.close()
@@ -117,10 +119,11 @@ def my_comparisons():
     try:
         conn = sqlite3.connect(os.path.join(os.getcwd(), os.getenv('DB_NAME')))
         comparisons = conn.cursor().execute("""select CA1.brand, CA1.model, CA1.production_year, CA1.price, CA1.url,
-                                            CA2.brand, CA2.model, CA2.production_year, CA2.price, CA2.url
+                                            CA2.brand, CA2.model, CA2.production_year, CA2.price, CA2.url,
+                                            CO.comparison_id, CO.is_active
                                             from comparisons CO join cars CA1 on CO.car1_id = CA1.car_id
                                             join cars CA2 on CO.car2_id = CA2.car_id
-                                            where user_id=?""", (session['user_id'], )).fetchall()
+                                            where CO.is_active = 1 and CO.user_id=?""", (session['user_id'], )).fetchall()
         text = ""
         if len(comparisons) > 0:
             for comparison in comparisons:
@@ -129,7 +132,12 @@ def my_comparisons():
                             {comparison[0]} {comparison[1]} z {comparison[2]} za {comparison[3]}
                             <br />vs<br />
                             {comparison[5]} {comparison[6]} z {comparison[7]} za {comparison[8]}
-                            </a></li><br />"""
+                            </a>
+                            <br />
+                            <button type="button" class="close" onClick="deleteComparison({comparison[10]})">
+                                <span>&times;</span>
+                            </button>
+                            </li><br />"""
         else:
             text = ""
         conn.close()
@@ -138,10 +146,24 @@ def my_comparisons():
     if request.method == 'POST':
         try:
             conn = sqlite3.connect(os.path.join(os.getcwd(), os.getenv('DB_NAME')))
-            conn.cursor().execute("delete from comparisons where user_id=?", (session['user_id'], ))
+            conn.cursor().execute("update comparisons set is_active=0 where user_id=?", (session['user_id'], ))
             conn.commit()
             conn.close()
             return redirect(url_for('compare.my_comparisons'))
         except:
             flash("Podczas czyszczenia listy porównań wystąpił błąd.")
     return render_template("my-comparisons.html", text=text)
+
+
+@comp.route('/delete-comparison', methods=['GET', 'POST'])
+def delete_comparison():
+    js = json.loads(request.data)
+    try:
+        conn = sqlite3.connect(os.path.join(os.getcwd(), os.getenv('DB_NAME')))
+        conn.cursor().execute("update comparisons set is_active=0 where comparison_id=?", (js['comparison_id'], ))
+        conn.commit()
+        conn.close()
+        return redirect(url_for('compare.my_comparisons'))
+    except:
+        flash("Podczas usuwania porównania wystąpił błąd.")
+    return jsonify({})

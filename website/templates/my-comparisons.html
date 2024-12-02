@@ -11,4 +11,14 @@
 <ul class="list-group d-flex justify-content-center align-items-center">
     {{ text | safe }}
 </ul>
+<script type="text/javascript">
+  function deleteComparison(comparison_id) {
+    fetch("/delete-comparison", {
+      method: "POST",
+      body: JSON.stringify({ comparison_id: comparison_id }),
+    }).then((_res) => {
+      window.location.href = "/my-comparisons";
+    });
+  }
+</script>
 {% endblock %}
