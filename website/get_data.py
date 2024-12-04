@@ -2,10 +2,8 @@ import requests
 import sys
 import os
 from bs4 import BeautifulSoup
-from dotenv import load_dotenv
 
 
-load_dotenv()
 headers = {'User-Agent': os.getenv('USER-AGENT')}
 
 
