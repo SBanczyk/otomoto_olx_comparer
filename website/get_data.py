@@ -22,11 +22,11 @@ def get_otomoto_data(url):
         car_data = {}
         car_data['website'] = "OTOMOTO"
         content = BeautifulSoup(response.content, 'html.parser')
-        car_data['price'] = clean_value(content.find_all("h3", {"class": "ooa-1kdys7g"})[0].get_text())
-        car_data['currency'] = content.find_all("p", {"class": "ooa-m6bn4u"})[0].get_text()
-        car_data['brand'] = content.find_all("h1", {"class": "ooa-1dueukt"})[0].get_text().split(" ")[0]
-        properties = content.find_all("p", {"class": "ee3fiwr3 ooa-rlgnr er34gjf0"})
-        values = content.find_all("p", {"class": "ee3fiwr2 ooa-1rcllto er34gjf0"})
+        car_data['price'] = clean_value(content.find_all("h3", {"class": "offer-price__number evnmei44 ooa-1kdys7g"})[0].get_text())
+        car_data['currency'] = content.find_all("p", {"class": "offer-price__currency evnmei45 ooa-m6bn4u"})[0].get_text()
+        car_data['brand'] = content.find_all("h1", {"class": "offer-title big-text e12csvfg2 ooa-1dueukt"})[0].get_text().split(" ")[0]
+        properties = content.find_all("p", {"class": "ee3fiwr3 ooa-rlgnr"})
+        values = content.find_all("p", {"class": "ee3fiwr2 ooa-1rcllto"})
         for property, value in zip(properties, values):
             property = property.get_text().strip()
             value = value.get_text().strip()
@@ -41,8 +41,8 @@ def get_otomoto_data(url):
                     car_data['fuel'] = clean_value(value)
                 elif property == "Skrzynia biegów":
                     car_data['gearbox'] = clean_value(value)
-        properties = content.find_all("p", {"class": "eim4snj7 ooa-y26jp er34gjf0"})
-        values = content.find_all("p", {"class": "eim4snj8 ooa-17xeqrd er34gjf0"})
+        properties = content.find_all("p", {"class": "eim4snj7 ooa-y26jp"})
+        values = content.find_all("p", {"class": "eim4snj8 ooa-17xeqrd"})
         for property, value in zip(properties, values):
             property = property.get_text().strip()
             value = value.get_text().strip()
@@ -68,14 +68,14 @@ def get_olx_data(url):
                 break
         if not is_passenger_car:
             raise ValueError
-        properties_values = content.find_all("p", {"class": "css-b5m1rv"})
+        properties_values = content.find_all("p", {"class": "css-1wgiva2"})
         if len(properties_values) == 0:
             raise Exception("No data.")
         car_data = {}
         car_data['website'] = "OLX"
-        car_data['price'] = clean_value(content.find_all("h3", {"class": "css-90xrc0"})[0].get_text()[:-3])
-        car_data['currency'] = content.find_all("h3", {"class": "css-90xrc0"})[0].get_text()[-2:]
-        car_data['brand'] = content.find_all("h4", {"class": "css-1kc83jo"})[0].get_text().split(" ")[0]
+        car_data['price'] = clean_value(content.find_all("h3", {"class": "css-fqcbii"})[0].get_text()[:-3])
+        car_data['currency'] = content.find_all("h3", {"class": "css-fqcbii"})[0].get_text()[-2:]
+        car_data['brand'] = content.find_all("h4", {"class": "css-yde3oc"})[0].get_text().split(" ")[0]
         for property_value in properties_values:
             property_value = property_value.get_text()
             if ":" in property_value:
