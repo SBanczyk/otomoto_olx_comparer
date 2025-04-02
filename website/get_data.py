@@ -68,14 +68,14 @@ def get_olx_data(url):
                 break
         if not is_passenger_car:
             raise ValueError
-        properties_values = content.find_all("p", {"class": "css-1wgiva2"})
+        properties_values = content.find_all("p", {"class": "css-z0m36u"})
         if len(properties_values) == 0:
             raise Exception("No data.")
         car_data = {}
         car_data['website'] = "OLX"
         car_data['price'] = clean_value(content.find_all("h3", {"class": "css-fqcbii"})[0].get_text()[:-3])
         car_data['currency'] = content.find_all("h3", {"class": "css-fqcbii"})[0].get_text()[-2:]
-        car_data['brand'] = content.find_all("h4", {"class": "css-yde3oc"})[0].get_text().split(" ")[0]
+        car_data['brand'] = content.find_all("h4", {"class": "css-10ofhqw"})[0].get_text().split(" ")[0]
         for property_value in properties_values:
             property_value = property_value.get_text()
             if ":" in property_value:
