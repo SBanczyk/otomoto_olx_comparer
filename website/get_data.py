@@ -22,11 +22,11 @@ def get_otomoto_data(url):
         car_data = {}
         car_data['website'] = "OTOMOTO"
         content = BeautifulSoup(response.content, 'html.parser')
-        car_data['price'] = clean_value(content.find_all("h3", {"class": "offer-price__number evnmei44 ooa-1kdys7g"})[0].get_text())
-        car_data['currency'] = content.find_all("p", {"class": "offer-price__currency evnmei45 ooa-m6bn4u"})[0].get_text()
-        car_data['brand'] = content.find_all("h1", {"class": "offer-title big-text e12csvfg2 ooa-1dueukt"})[0].get_text().split(" ")[0]
-        properties = content.find_all("p", {"class": "ee3fiwr3 ooa-rlgnr"})
-        values = content.find_all("p", {"class": "ee3fiwr2 ooa-1rcllto"})
+        car_data['price'] = clean_value(content.find_all("span", {"class": "offer-price__number"})[0].get_text())
+        car_data['currency'] = content.find_all("span", {"class": "offer-price__currency ewf7bkd5 ooa-17squvz"})[0].get_text()
+        car_data['brand'] = content.find_all("h1", {"class": "offer-title big-text eng3xoo2 ooa-9ux592"})[0].get_text().split(" ")[0]
+        properties = content.find_all("p", {"class": "e127x9ub3 ooa-t8czuw"})
+        values = content.find_all("p", {"class": "e127x9ub2 ooa-11fwepm"})
         for property, value in zip(properties, values):
             property = property.get_text().strip()
             value = value.get_text().strip()
@@ -41,8 +41,8 @@ def get_otomoto_data(url):
                     car_data['fuel'] = clean_value(value)
                 elif property == "Skrzynia biegów":
                     car_data['gearbox'] = clean_value(value)
-        properties = content.find_all("p", {"class": "eim4snj7 ooa-y26jp"})
-        values = content.find_all("p", {"class": "eim4snj8 ooa-17xeqrd"})
+        properties = content.find_all("p", {"class": "ekwurce8 ooa-1vfan6r"})
+        values = content.find_all("p", {"class": "ekwurce9 ooa-10u0vtk"})
         for property, value in zip(properties, values):
             property = property.get_text().strip()
             value = value.get_text().strip()
