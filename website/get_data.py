@@ -2,8 +2,10 @@ import requests
 import sys
 import os
 from bs4 import BeautifulSoup
+from dotenv import load_dotenv
 
 
+load_dotenv()
 headers = {'User-Agent': os.getenv('USER-AGENT')}
 
 
@@ -53,7 +55,7 @@ def get_otomoto_data(url):
                     car_data['year'] = clean_value(value)
         order = ['brand', 'model', 'year', 'fuel', 'engine_size', 'power', 'gearbox', 'mileage', 'price', 'currency', 'website']
         return {key: car_data[key] for key in order}
-    elif response.status_code == 404:
+    else:
         raise Exception(f"Status code: {response.status_code}.")
 
 
