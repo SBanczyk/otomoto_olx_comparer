@@ -61,3 +61,25 @@ def sign_up():
             except:
                 flash("Podczas rejestracji wystąpił błąd.")
     return render_template("sign-up.html")
+
+
+@auth.route('/change-password', methods=['GET', 'POST'])
+def change_password():
+    if request.method == 'POST':
+        password_1 = request.form.get('password_1')
+        password_2 = request.form.get('password_2')
+        if password_1 != password_2:
+            flash("Hasła są rózne.")
+        if len(password_1) < 8:
+            flash("Hasło musi mieć co najmniej 8 znaków.")
+        else:
+            try:
+                conn = sqlite3.connect(os.path.join(os.getcwd(), os.getenv('DB_NAME')))
+                hashed_password = bcrypt.hashpw(password_1.encode(), bcrypt.gensalt())
+                conn.cursor().execute("update users set password=? where email=?", (hashed_password, session['email']))
+                conn.commit()
+                conn.close()
+                flash("Hasło zostało zmienione.")
+            except:
+                flash("Podczas zmiany hasła wystąpił błąd.")
+    return render_template("change-password.html")
