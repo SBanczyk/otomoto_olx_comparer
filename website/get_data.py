@@ -27,8 +27,8 @@ def get_otomoto_data(url):
         car_data['price'] = clean_value(content.find_all("span", {"class": "offer-price__number"})[0].get_text())
         car_data['currency'] = content.find_all("span", {"class": "offer-price__currency ewf7bkd5 ooa-17squvz"})[0].get_text()
         car_data['brand'] = content.find_all("h1", {"class": "offer-title big-text eng3xoo2 ooa-9ux592"})[0].get_text().split(" ")[0]
-        properties = content.find_all("p", {"class": "e127x9ub3 ooa-t8czuw"})
-        values = content.find_all("p", {"class": "e127x9ub2 ooa-11fwepm"})
+        properties = content.find_all("p", {"class": "ez0zock3 ooa-t8czuw"})
+        values = content.find_all("p", {"class": "ez0zock2 ooa-11fwepm"})
         for property, value in zip(properties, values):
             property = property.get_text().strip()
             value = value.get_text().strip()
@@ -70,7 +70,7 @@ def get_olx_data(url):
                 break
         if not is_passenger_car:
             raise ValueError
-        properties_values = content.find_all("p", {"class": "css-z0m36u"})
+        properties_values = content.find_all("p", {"class": "css-1los5bp"})
         if len(properties_values) == 0:
             raise Exception("No data.")
         car_data = {}
