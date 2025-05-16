@@ -43,8 +43,8 @@ def get_otomoto_data(url):
                     car_data['fuel'] = clean_value(value)
                 elif property == "Skrzynia biegów":
                     car_data['gearbox'] = clean_value(value)
-        properties = content.find_all("p", {"class": "ekwurce8 ooa-1vfan6r"})
-        values = content.find_all("p", {"class": "ekwurce9 ooa-10u0vtk"})
+        properties = content.find_all("p", {"class": "eur4qwl8 ooa-1vfan6r"})
+        values = content.find_all("p", {"class": "eur4qwl9 ooa-10u0vtk"})
         for property, value in zip(properties, values):
             property = property.get_text().strip()
             value = value.get_text().strip()
